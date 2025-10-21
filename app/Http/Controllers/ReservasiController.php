@@ -8,6 +8,7 @@ use App\Models\Kamar;
 use App\Models\Maintenance;
 use Illuminate\Http\Request;
 use App\Models\ReportSewa;
+use Illuminate\Support\Facades\Storage;
 use Carbon\Carbon;
 
 class ReservasiController extends Controller
@@ -155,4 +156,28 @@ public function selesai($id)
 
         return redirect()->route('resepsionis.reservasi.index')->with('success', 'Reservasi berhasil dihapus.');
     }
+    public function getFotoTipe($id)
+{
+    $tipe = TipeKamar::find($id);
+
+    if (!$tipe || !$tipe->foto) {
+        // Gambar default jika tidak ada foto
+        return response()->json([
+            'foto' => asset('images/no-image.jpg') // Pastikan kamu punya file ini di public/images/
+        ]);
+    }
+
+    // Pastikan path storage publik bisa diakses
+    $fotoPath = 'storage/' . $tipe->foto;
+
+    // Kalau file-nya benar-benar ada
+    if (Storage::disk('public')->exists(str_replace('tipekamar/', '', $tipe->foto))) {
+        return response()->json(['foto' => asset($fotoPath)]);
+    }
+
+    // Fallback kalau file tidak ditemukan
+    return response()->json([
+        'foto' => asset('images/no-image.jpg')
+    ]);
+}
 }

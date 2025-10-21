@@ -15,6 +15,7 @@ class TipeKamar extends Model
         'nama',
         'harga',
         'deskripsi',
+        'foto', // <-- tambahkan ini
     ];
     
     public function kamars()

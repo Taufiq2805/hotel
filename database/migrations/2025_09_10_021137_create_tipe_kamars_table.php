@@ -11,13 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('tipe_kamars', function (Blueprint $table) {
-            $table->id();
-            $table->string('nama');
-            $table->integer('harga');
-            $table->text('deskripsi')->nullable();
-            $table->timestamps();
-        });
+      Schema::create('tipe_kamars', function (Blueprint $table) {
+         $table->id();
+         $table->string('nama');
+         $table->integer('harga');
+         $table->text('deskripsi')->nullable();
+         $table->string('foto')->nullable(); // ← tambahkan ini
+         $table->timestamps();
+    });
     }
 
     /**

@@ -55,7 +55,12 @@ Route::group([
     Route::get('/', [ResepsionisDashboardController::class, 'index'])->name('dashboard');
     Route::resource('reservasi', ReservasiController::class);
     Route::post('/reservasi/{id}/selesai', [ReservasiController::class, 'selesai'])->name('reservasi.selesai');
-}); 
+
+    // ✅ Perbaikan di sini
+Route::get('/get-foto-tipe/{id}', [\App\Http\Controllers\TipeKamarController::class, 'getFotoTipe']);
+});
+
+
 
 Route::group([
     'prefix'     => 'housekeeping',
