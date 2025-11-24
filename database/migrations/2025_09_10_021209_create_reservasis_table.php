@@ -10,8 +10,8 @@ return new class extends Migration
      * Run the migrations.
      */
    public function up(): void
-{
-    Schema::create('reservasis', function (Blueprint $table) {
+    {
+     Schema::create('reservasis', function (Blueprint $table) {
         $table->id();
         $table->foreignId('kamar_id')->constrained('kamars')->onDelete('cascade');
         $table->string('nama_tamu');
@@ -21,9 +21,8 @@ return new class extends Migration
         $table->integer('total')->nullable();
         $table->timestamps();
         $table->softDeletes(); // ← tambahkan ini
-    });
-}
-
+      });
+    }
 
     /**
      * Reverse the migrations.

@@ -11,19 +11,16 @@ return new class extends Migration
      */
     public function up(): void
     {
-         Schema::create('maintenances', function (Blueprint $table) {
-            $table->id();
+      Schema::create('maintenances', function (Blueprint $table) {
+          $table->id();
+          $table->foreignId('kamar_id')->constrained('kamars')->onDelete('cascade');
+          $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
+          $table->date('tanggal');
+          $table->enum('status', ['tersedia', 'terisi', 'dibersihkan', 'maintenance', 'selesai'])->default('maintenance');
+          $table->text('catatan')->nullable();
+          $table->timestamps();
+});
 
-            // Relasi ke kamar
-            $table->foreignId('kamar_id')->constrained('kamars')->onDelete('cascade');
-            // Relasi ke user (siapa yang membuat/menangani)
-            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
-            $table->date('tanggal'); // Tanggal maintenance
-            $table->enum('status', ['tersedia', 'terisi', 'dibersihkan', 'maintenance'])->default('maintenance'); // Status maintenance
-            $table->text('catatan')->nullable(); // Catatan tambahan
-
-            $table->timestamps();
-        });
     }
 
     /**

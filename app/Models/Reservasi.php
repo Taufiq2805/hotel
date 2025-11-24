@@ -24,5 +24,13 @@ class Reservasi extends Model
     {
         return $this->belongsTo(Kamar::class);
     }
+
+    public function makanans()
+{
+    return $this->belongsToMany(Makanan::class, 'reservasi_makanans')
+                ->withPivot('qty')
+                ->withTimestamps();
+}
+
 }
 

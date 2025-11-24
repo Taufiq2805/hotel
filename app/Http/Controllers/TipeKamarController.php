@@ -89,26 +89,26 @@ class TipeKamarController extends Controller
 
     // ✅ Optional: API untuk ambil foto berdasarkan ID tipe kamar
     public function getFotoTipe($id)
-{
-    $tipe = \App\Models\TipeKamar::find($id);
-
-    if (!$tipe || !$tipe->foto) {
+    {
+        $tipe = \App\Models\TipeKamar::find($id);
+    
+        if (!$tipe || !$tipe->foto) {
+            return response()->json([
+                'foto' => asset('images/no-image.jpg')
+            ]);
+        }
+    
+        // Path relatif dan absolut
+        $relativePath = 'storage/tipekamar/' . $tipe->foto;
+        $absolutePath = storage_path('app/public/tipekamar/' . $tipe->foto);
+    
+        if (file_exists($absolutePath)) {
+            return response()->json(['foto' => asset($relativePath)]);
+        }
+    
         return response()->json([
             'foto' => asset('images/no-image.jpg')
         ]);
     }
-
-    // Path relatif dan absolut
-    $relativePath = 'storage/tipekamar/' . $tipe->foto;
-    $absolutePath = storage_path('app/public/tipekamar/' . $tipe->foto);
-
-    if (file_exists($absolutePath)) {
-        return response()->json(['foto' => asset($relativePath)]);
-    }
-
-    return response()->json([
-        'foto' => asset('images/no-image.jpg')
-    ]);
-}
 
 }

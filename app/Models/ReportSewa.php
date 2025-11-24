@@ -8,7 +8,7 @@ class ReportSewa extends Model
 {
     protected $table = 'report_sewas';
 
-    protected $fillable = ['id_reservasi'];
+    protected $fillable = ['id_reservasi', 'total'];
 
     public function reservasi()
     {

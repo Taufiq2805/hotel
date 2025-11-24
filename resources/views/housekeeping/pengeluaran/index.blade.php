@@ -10,7 +10,10 @@
         <div class="alert alert-success">{{ session('success') }}</div>
     @endif
 
-    <button class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#modalTambah">+ Tambah Pengeluaran</button>
+    <!-- Tombol Tambah -->
+    <button class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#modalTambah">
+        + Tambah Pengeluaran
+    </button>
 
     <div class="table-responsive">
         <table class="table align-middle">
@@ -18,6 +21,7 @@
                 <tr>
                     <th>No</th>
                     <th>Username</th>
+                    <th>Kamar</th>
                     <th>Keterangan</th>
                     <th>Tanggal Pengeluaran</th>
                     <th>Jumlah Pengeluaran</th>
@@ -25,67 +29,88 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach($pengeluarans as $i => $p)
+                @forelse($pengeluarans as $i => $p)
                 <tr>
                     <td>{{ $i + 1 }}</td>
                     <td>{{ $p->user->name ?? '-' }}</td>
-                    <td>{{ $p->nama_barang }} {{ $p->jumlah_barang }} pcs</td>
+                    <td>{{ $p->kamar->nomor_kamar ?? '-' }}</td>
+                    <td>{{ $p->nama_barang }} ({{ $p->jumlah_barang }} pcs)</td>
                     <td>{{ \Carbon\Carbon::parse($p->tanggal_pengeluaran)->format('d-m-Y') }}</td>
-                    <td>Rp. {{ number_format($p->total_harga, 0, ',', '.') }}</td>
+                    <td>Rp {{ number_format($p->total_harga, 0, ',', '.') }}</td>
                     <td>
-                        <!-- Tombol Edit -->
                         <button class="btn btn-sm btn-success" data-bs-toggle="modal" data-bs-target="#modalEdit-{{ $p->id }}">Ubah</button>
 
-                        <!-- Form Hapus -->
                         <form action="{{ route('housekeeping.pengeluaran.destroy', $p->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Yakin hapus data ini?')">
-                            @csrf @method('DELETE')
+                            @csrf
+                            @method('DELETE')
                             <button class="btn btn-sm btn-danger">Hapus</button>
                         </form>
                     </td>
                 </tr>
 
                 <!-- Modal Edit -->
-                <div class="modal fade" id="modalEdit-{{ $p->id }}" tabindex="-1" aria-labelledby="modalEditLabel-{{ $p->id }}" aria-hidden="true">
-                    <div class="modal-dialog modal-dialog-centered modal-lg">
-                        <div class="modal-content">
-                            <form action="{{ route('housekeeping.pengeluaran.update', $p->id) }}" method="POST">
-                                @csrf
-                                @method('PUT')
-                                <div class="modal-header">
-                                    <h5 class="modal-title">Edit Pengeluaran</h5>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                                </div>
-                                <div class="modal-body row g-3">
-                                    <div class="col-md-6">
-                                        <label class="form-label">Tanggal Pengeluaran</label>
-                                        <input type="date" name="tanggal_pengeluaran" class="form-control" value="{{ $p->tanggal_pengeluaran }}" required>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label class="form-label">Nama Barang</label>
-                                        <input type="text" name="nama_barang" class="form-control" value="{{ $p->nama_barang }}" required>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <label class="form-label">Jumlah Barang</label>
-                                        <input type="number" name="jumlah_barang" class="form-control jumlah" value="{{ $p->jumlah_barang }}" required>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <label class="form-label">Harga Satuan</label>
-                                        <input type="number" name="harga_satuan" class="form-control harga" value="{{ $p->harga_satuan }}" required>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <label class="form-label">Total Harga</label>
-                                        <input type="number" name="total_harga" class="form-control total" value="{{ $p->total_harga }}" readonly>
-                                    </div>
-                                </div>
-                                <div class="modal-footer">
-                                    <button class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                                    <button class="btn btn-success">Simpan Perubahan</button>
-                                </div>
-                            </form>
-                        </div>
+             <!-- Modal Edit Pengeluaran -->
+<div class="modal fade" id="modalEdit-{{ $p->id }}" tabindex="-1" aria-labelledby="modalEditLabel-{{ $p->id }}" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <form action="{{ route('housekeeping.pengeluaran.update', $p->id) }}" method="POST">
+                @csrf
+                @method('PUT')
+
+                {{-- 🔥 Hidden kamar_id agar tidak hilang saat update --}}
+                <input type="hidden" name="kamar_id" value="{{ $p->kamar_id }}">
+                <input type="hidden" name="maintenance_id" value="{{ $p->maintenance_id }}">
+
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalEditLabel-{{ $p->id }}">Edit Pengeluaran</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+
+                <div class="modal-body row g-3">
+                    <div class="col-md-6">
+                        <label class="form-label">Tanggal Pengeluaran</label>
+                        <input type="date" name="tanggal_pengeluaran" class="form-control"
+                            value="{{ $p->tanggal_pengeluaran }}" required>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label">Nama Barang</label>
+                        <input type="text" name="nama_barang" class="form-control"
+                            value="{{ $p->nama_barang }}" required>
+                    </div>
+
+                    <div class="col-md-4">
+                        <label class="form-label">Jumlah Barang</label>
+                        <input type="number" name="jumlah_barang" class="form-control jumlah"
+                            value="{{ $p->jumlah_barang }}" required>
+                    </div>
+
+                    <div class="col-md-4">
+                        <label class="form-label">Harga Satuan</label>
+                        <input type="number" name="harga_satuan" class="form-control harga"
+                            value="{{ $p->harga_satuan }}" required>
+                    </div>
+
+                    <div class="col-md-4">
+                        <label class="form-label">Total Harga</label>
+                        <input type="number" name="total_harga" class="form-control total"
+                            value="{{ $p->total_harga }}" readonly>
                     </div>
                 </div>
-                @endforeach
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                    <button type="submit" class="btn btn-success">Simpan Perubahan</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+                @empty
+                <tr>
+                    <td colspan="7" class="text-center text-muted">Belum ada data pengeluaran.</td>
+                </tr>
+                @endforelse
             </tbody>
         </table>
     </div>
@@ -97,11 +122,22 @@
         <div class="modal-content">
             <form action="{{ route('housekeeping.pengeluaran.store') }}" method="POST">
                 @csrf
+
                 <div class="modal-header">
                     <h5 class="modal-title" id="modalTambahLabel">Tambah Pengeluaran</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
+
                 <div class="modal-body row g-3">
+                    <div class="col-md-6">
+                        <label class="form-label">Kamar</label>
+                        <select name="kamar_id" class="form-select" required>
+                            <option value="">-- Pilih Kamar --</option>
+                            @foreach($kamars as $k)
+                                <option value="{{ $k->id }}">{{ $k->nomor_kamar }}</option>
+                            @endforeach
+                        </select>
+                    </div>
                     <div class="col-md-6">
                         <label class="form-label">Tanggal Pengeluaran</label>
                         <input type="date" name="tanggal_pengeluaran" class="form-control" required>
@@ -110,11 +146,11 @@
                         <label class="form-label">Nama Barang</label>
                         <input type="text" name="nama_barang" class="form-control" required>
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                         <label class="form-label">Jumlah Barang</label>
                         <input type="number" name="jumlah_barang" class="form-control jumlah" required>
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                         <label class="form-label">Harga Satuan</label>
                         <input type="number" name="harga_satuan" class="form-control harga" required>
                     </div>
@@ -123,6 +159,7 @@
                         <input type="number" name="total_harga" class="form-control total" readonly>
                     </div>
                 </div>
+
                 <div class="modal-footer">
                     <button class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
                     <button class="btn btn-primary">Simpan</button>
@@ -140,35 +177,27 @@
         const hargaInput = modalElement.querySelector('input[name="harga_satuan"]');
         const totalInput = modalElement.querySelector('input[name="total_harga"]');
 
-        if (jumlahInput && hargaInput && totalInput) {
-            function updateTotal() {
-                const jumlah = parseInt(jumlahInput.value) || 0;
-                const harga = parseInt(hargaInput.value) || 0;
-                totalInput.value = jumlah * harga;
-            }
+        if (!jumlahInput || !hargaInput || !totalInput) return;
 
-            jumlahInput.addEventListener('input', updateTotal);
-            hargaInput.addEventListener('input', updateTotal);
+        function updateTotal() {
+            const jumlah = parseFloat(jumlahInput.value) || 0;
+            const harga = parseFloat(hargaInput.value) || 0;
+            totalInput.value = jumlah * harga;
         }
+
+        jumlahInput.addEventListener('input', updateTotal);
+        hargaInput.addEventListener('input', updateTotal);
     }
 
     document.addEventListener('DOMContentLoaded', function () {
-        // Modal Tambah
         const modalTambah = document.getElementById('modalTambah');
         if (modalTambah) {
-            modalTambah.addEventListener('shown.bs.modal', function () {
-                setupAutoTotal(modalTambah);
-            });
+            modalTambah.addEventListener('shown.bs.modal', () => setupAutoTotal(modalTambah));
         }
 
-        // Modal Edit
-        const editModals = document.querySelectorAll('[id^="modalEdit-"]');
-        editModals.forEach(modal => {
-            modal.addEventListener('shown.bs.modal', function () {
-                setupAutoTotal(modal);
-            });
+        document.querySelectorAll('[id^="modalEdit-"]').forEach(modal => {
+            modal.addEventListener('shown.bs.modal', () => setupAutoTotal(modal));
         });
     });
 </script>
 @endpush
-

@@ -46,5 +46,6 @@ class Kernel extends HttpKernel
         'verified'   => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'role'       => \App\Http\Middleware\RoleMiddleware::class,     // <- kalau kamu pakai role
         'is_admin'   => \App\Http\Middleware\IsAdmin::class,              // <- kalau kamu punya ini
+        'jam.kerja' => \App\Http\Middleware\CheckJamKerja::class,
     ];
 }

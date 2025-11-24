@@ -93,6 +93,21 @@
   </a>
 </li>
 
+<!-- Makanan -->
+<li class="menu-item {{ request()->routeIs('admin.makanan.*') ? 'active open' : '' }}">
+  <a href="{{ route('admin.makanan.index') }}" class="menu-link">
+    <i class="menu-icon icon-base ri ri-restaurant-line"></i>
+    <div data-i18n="Makanan">Makanan</div>
+  </a>
+</li>
+
+<!-- Shift -->
+<li class="menu-item {{ request()->routeIs('admin.shift.*') ? 'active open' : '' }}">
+  <a href="{{ route('admin.shift.index') }}" class="menu-link">
+    <i class="menu-icon icon-base ri ri-time-line"></i>
+    <div data-i18n="ShiftManagement">Manajemen Shift</div>
+  </a>
+
 <!-- Manajemen User -->
 <li class="menu-item {{ request()->routeIs('admin.user.*') ? 'active open' : '' }}">
   <a href="{{ route('admin.user.index') }}" class="menu-link">
@@ -100,6 +115,13 @@
     <div data-i18n="UserManagement">Manajemen User</div>
   </a>
 </li>
+
+<!-- Informasi -->
+<li class="menu-item {{ request()->routeIs('admin.informasi.*') ? 'active open' : '' }}">
+  <a href="{{ route('admin.informasi.index') }}" class="menu-link">
+    <i class="menu-icon icon-base ri ri-information-line"></i>
+    <div data-i18n="Informasi">Informasi</div>
+  </a>
 
 <!-- Riwayat -->
 <li class="menu-item {{ request()->routeIs('admin.riwayat.*') ? 'active open' : '' }}">

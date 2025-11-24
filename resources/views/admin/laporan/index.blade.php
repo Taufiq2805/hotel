@@ -80,9 +80,9 @@
     <a href="{{ route('admin.laporan.export.pdf', request()->all()) }}" target="_blank" class="btn btn-danger mt-3">
     Cetak PDF
 </a>
-<a href="{{ route('admin.laporan.export.excel', request()->all()) }}" class="btn btn-success mt-3">
+<!-- <a href="{{ route('admin.laporan.export.excel', request()->all()) }}" class="btn btn-success mt-3">
     Export Excel
-</a>
+</a> -->
 
         <h5 class="text-danger mt-5">Laporan Pengeluaran</h5>
         <div class="table-responsive">

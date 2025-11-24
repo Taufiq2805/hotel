@@ -23,7 +23,7 @@ class Pengeluaran extends Model
     // Relasi ke Kamar (nullable)
     public function kamar()
     {
-        return $this->belongsTo(Kamar::class);
+        return $this->belongsTo(Kamar::class, 'kamar_id');
     }
 
     // Relasi ke Maintenance (nullable)
@@ -37,4 +37,18 @@ class Pengeluaran extends Model
     {
         return $this->belongsTo(User::class, 'created_by');
     }
+    protected static function booted()
+{
+    static::created(function ($pengeluaran) {
+        // Jika pengeluaran punya relasi ke maintenance dan kamar
+        if ($pengeluaran->maintenance && $pengeluaran->kamar) {
+            // Ubah status maintenance ke 'selesai'
+            $pengeluaran->maintenance->update(['status' => 'selesai']);
+
+            // Ubah status kamar ke 'tersedia'
+            $pengeluaran->kamar->update(['status' => 'tersedia']);
+        }
+    });
+}
+
 }

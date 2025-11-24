@@ -16,6 +16,10 @@ use App\Http\Controllers\PengeluaranController;
 use App\Http\Controllers\PemasukanController;
 use App\Http\Controllers\RiwayatPengeluaranController;
 use App\Http\Controllers\LaporanController;
+use App\Http\Controllers\ShiftController;
+use App\Http\Controllers\MakananController;
+use App\Http\Controllers\InformasiController;
+use App\Http\Controllers\ResepsionisInformasiController;
 
 Route::get('/', function () {
     return view('auth.login');
@@ -42,6 +46,9 @@ Route::group([
     Route::get('/riwayat-sewa', [ReportSewaController::class, 'index'])->name('riwayat.index');
     Route::get('/pemasukan', [PemasukanController::class, 'index'])->name('pemasukan.index');
     Route::get('/pengeluaran', [RiwayatPengeluaranController::class, 'index'])->name('pengeluaran.index');
+    Route::resource('shift', ShiftController::class);
+    Route::resource('informasi', InformasiController::class);
+    Route::resource('makanan', MakananController::class);   
     Route::get('/laporan', [LaporanController::class, 'index'])->name('laporan.index');
     Route::get('/laporan/export/pdf', [LaporanController::class, 'exportPDF'])->name('laporan.export.pdf');
     Route::get('/laporan/export/excel', [LaporanController::class, 'exportExcel'])->name('laporan.export.excel');
@@ -52,9 +59,22 @@ Route::group([
     'as'         => 'resepsionis.',
     'middleware' => ['auth'],
 ], function () {
-    Route::get('/', [ResepsionisDashboardController::class, 'index'])->name('dashboard');
+
+    // Dashboard
+    Route::get('/', [ResepsionisDashboardController::class, 'index'])
+        ->name('dashboard');
+
+    // Reservasi
     Route::resource('reservasi', ReservasiController::class);
-    Route::post('/reservasi/{id}/selesai', [ReservasiController::class, 'selesai'])->name('reservasi.selesai');
+    Route::post('/reservasi/{id}/selesai', [ReservasiController::class, 'selesai'])
+        ->name('reservasi.selesai');
+
+    // Informasi
+    Route::get('informasi', [ResepsionisInformasiController::class, 'index'])
+        ->name('informasi.index');   // ← INI YANG WAJIB ADA
+   Route::get('/reservasi/{id}/export-pdf', [ReservasiController::class, 'exportPdf'])
+        ->name('reservasi.export.pdf');
+
 
     // ✅ Perbaikan di sini
 Route::get('/get-foto-tipe/{id}', [\App\Http\Controllers\TipeKamarController::class, 'getFotoTipe']);
@@ -76,5 +96,8 @@ Route::group([
     // Tambahan route untuk update status
     Route::post('maintenance/status/{id}', [MaintenanceController::class, 'updateStatus'])
         ->name('maintenance.updateStatus');
+        // routes/web.php
+    Route::post('maintenance/update-catatan', [MaintenanceController::class, 'updateCatatan'])->name('maintenance.updateCatatan');
+
 });
 

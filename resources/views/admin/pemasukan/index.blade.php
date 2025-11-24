@@ -25,16 +25,24 @@
                         </tr>
                     </thead>
                     <tbody>
+                        @php $grandTotal = 0; @endphp
                         @foreach($data as $i => $d)
                         <tr>
                             <td>{{ $i + 1 }}</td>
                             <td>{{ $d['username'] }}</td>
                             <td>{{ $d['pesan'] }}</td>
                             <td>Rp. {{ number_format($d['total'], 0, ',', '.') }}</td>
-                            <td>{{ $d['tanggal'] }}</td>
+                            <td>{{ \Carbon\Carbon::parse($d['tanggal'])->format('d-m-Y H:i') }}</td>
                         </tr>
+                        @php $grandTotal += $d['total']; @endphp
                         @endforeach
                     </tbody>
+                    <tfoot>
+                        <tr>
+                            <th colspan="3" class="text-end">Total Pemasukan:</th>
+                            <th colspan="2">Rp. {{ number_format($grandTotal, 0, ',', '.') }}</th>
+                        </tr>
+                    </tfoot>
                 </table>
             </div>
         </div>
@@ -43,14 +51,11 @@
 @endsection
 
 @push('styles')
-<!-- DataTables CSS -->
 <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
 @endpush
 
 @push('scripts')
-<!-- jQuery -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<!-- DataTables JS -->
 <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
 <script>
     $(document).ready(function () {
@@ -68,7 +73,8 @@
                     "next": "Berikutnya",
                     "previous": "Sebelumnya"
                 }
-            }
+            },
+            order: [[4, 'desc']] // Urut berdasarkan tanggal terbaru
         });
     });
 </script>

@@ -11,18 +11,19 @@ return new class extends Migration
      */
     public function up(): void
     {
-         Schema::create('pengeluarans', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('kamar_id')->nullable()->constrained('kamars')->onDelete('set null');
-            $table->foreignId('maintenance_id')->nullable()->constrained('maintenances')->onDelete('set null');
-            $table->date('tanggal_pengeluaran');
-            $table->string('nama_barang');
-            $table->integer('jumlah_barang');
-            $table->integer('harga_satuan');
-            $table->integer('total_harga');
-            $table->foreignId('created_by')->constrained('users')->onDelete('cascade');
-            $table->timestamps();
-        });
+        Schema::create('pengeluarans', function (Blueprint $table) {
+             $table->id();
+             $table->foreignId('kamar_id')->nullable()->constrained('kamars')->onDelete('set null');
+             $table->foreignId('maintenance_id')->nullable()->constrained('maintenances')->onDelete('set null');
+             $table->date('tanggal_pengeluaran');
+             $table->string('nama_barang');
+             $table->integer('jumlah_barang');
+             $table->integer('harga_satuan');
+             $table->integer('total_harga');
+             $table->foreignId('created_by')->constrained('users')->onDelete('cascade');
+             $table->timestamps();
+    });
+
     }
 
     /**

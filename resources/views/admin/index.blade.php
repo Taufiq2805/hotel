@@ -54,20 +54,6 @@
         </div>
     </div>
 
-    <!-- Total Check-in -->
-    <div class="col-lg-3 col-md-6 mb-4">
-        <div class="card text-white bg-danger h-100">
-            <div class="card-body">
-                <h5 class="card-title">Check-in Saat Ini</h5>
-                <h2>{{ $totalCheckin }}</h2>
-            </div>
-            <div class="card-footer">
-                <a href="{{ route('resepsionis.reservasi.index') }}" class="text-white text-decoration-none">
-                    Lihat Detail <i class="fas fa-arrow-right"></i>
-                </a>
-            </div>
-        </div>
-    </div>
 
     <!-- Sisa Uang -->
     <div class="col-lg-3 col-md-6 mb-4">

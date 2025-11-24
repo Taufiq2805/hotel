@@ -25,17 +25,37 @@ class DashboardController extends Controller
         $totalReservasi  = Reservasi::count();
         $totalCheckin    = Reservasi::whereRaw("LOWER(TRIM(status)) = 'checkin'")->count();
 
-        // Total Pemasukan (dari riwayat sewa)
-        $totalPemasukan = ReportSewa::with('reservasi.kamar.tipe')->get()->sum(function ($item) {
-            $tipe = $item->reservasi->kamar->tipe ?? null;
-            $harga = $tipe->harga ?? 0;
+        // Total pemasukan kamar dari ReportSewa (total sudah termasuk kamar + makanan jika dicatat)
+    $totalPemasukanRooms = ReportSewa::with('reservasi.kamar.tipe')->get()->sum(function ($item) {
+    $res = $item->reservasi;
+    if (!$res || !$res->kamar) return 0;
 
-            $checkin = Carbon::parse($item->reservasi->tanggal_checkin);
-            $checkout = Carbon::parse($item->reservasi->tanggal_checkout);
-            $lama = $checkin->diffInDays($checkout);
+    $hargaKamar = $res->kamar->tipe->harga ?? 0;
+    $checkin  = Carbon::parse($res->tanggal_checkin ?? $res->check_in ?? now());
+    $checkout = Carbon::parse($res->tanggal_checkout ?? $res->check_out ?? now());
+    $lama     = $checkin->diffInDays($checkout);
+    if ($lama <= 0) $lama = 1;
 
-            return $harga * $lama;
-        });
+    return $hargaKamar * $lama;
+});
+
+$totalPemasukanMakanan = ReportSewa::with('reservasi.makanans')->get()->sum(function ($item) {
+    $res = $item->reservasi;
+    if (!$res) return 0;
+
+    return $res->makanans->sum(function ($m) {
+        $harga = $m->pivot->harga ?? $m->harga ?? 0;
+        $qty   = $m->pivot->qty ?? 1;
+        return $harga * $qty;
+    });
+});
+
+$totalPemasukan = $totalPemasukanRooms + $totalPemasukanMakanan;
+
+
+
+        // Gabungkan semua pemasukan
+        $totalPemasukan = $totalPemasukanRooms + $totalPemasukanMakanan;
 
         // Total Pengeluaran housekeeping
         $totalPengeluaran = Pengeluaran::sum('total_harga');
@@ -49,6 +69,8 @@ class DashboardController extends Controller
             'totalReservasi',
             'totalCheckin',
             'totalPemasukan',
+            'totalPemasukanRooms',
+            'totalPemasukanMakanan',
             'totalPengeluaran',
             'sisaUang'
         ));

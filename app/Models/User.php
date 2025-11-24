@@ -16,6 +16,7 @@ class User extends Authenticatable
         'email',
         'role',
         'password',
+         'shift_id',
     ];
 
     protected $hidden = [
@@ -67,9 +68,16 @@ class User extends Authenticatable
         return $query->where('role', 'resepsionis');
     }
 
+   
     // ============================
     // Relasi dengan tabel lain
     // ============================
+ 
+    public function shift()
+    {
+        return $this->belongsTo(Shift::class);
+    }
+
     public function maintenances()
     {
         return $this->hasMany(Maintenance::class, 'user_id'); // user sebagai housekeeping
