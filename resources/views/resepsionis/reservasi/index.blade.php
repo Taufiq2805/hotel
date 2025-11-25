@@ -99,9 +99,9 @@
                                 @csrf
                                 <button type="submit" class="btn btn-sm btn-success">Selesai</button>
                             </form>
-
-                            <!-- tombol Ubah -->
-
+                            <a href="{{ route('resepsionis.reservasi.export.pdf', $item->id) }}" class="btn btn-sm btn-info">
+                              Download PDF
+                            </a>
                             <!-- tombol Hapus -->
                             <form action="{{ route('resepsionis.reservasi.destroy', $item->id) }}" method="POST" onsubmit="return confirm('Hapus reservasi?')">
                                 @csrf

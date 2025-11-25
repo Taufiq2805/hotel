@@ -247,15 +247,15 @@ class ReservasiController extends Controller
 
         return response()->json(['foto' => asset('images/no-image.jpg')]);
     }
-
     public function exportPdf($id)
 {
     $reservasi = Reservasi::with(['kamar.tipe', 'makanans'])->findOrFail($id);
 
-    $pdf = \PDF::loadView('pdf.invoice', compact('reservasi'))
+   $pdf = \PDF::loadView('pdf.invoice', compact('reservasi'))
                ->setPaper('A4', 'portrait');
 
     return $pdf->download('Invoice-'.$reservasi->nama_tamu.'.pdf');
 }
+
 
 }

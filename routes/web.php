@@ -66,21 +66,21 @@ Route::group([
 
     // Reservasi
     Route::resource('reservasi', ReservasiController::class);
+
     Route::post('/reservasi/{id}/selesai', [ReservasiController::class, 'selesai'])
         ->name('reservasi.selesai');
 
-    // Informasi
-    Route::get('informasi', [ResepsionisInformasiController::class, 'index'])
-        ->name('informasi.index');   // ← INI YANG WAJIB ADA
-   Route::get('/reservasi/{id}/export-pdf', [ReservasiController::class, 'exportPdf'])
+    // Export PDF
+    Route::get('/reservasi/{id}/export-pdf', [ReservasiController::class, 'exportPdf'])
         ->name('reservasi.export.pdf');
 
+    // Informasi
+    Route::get('informasi', [ResepsionisInformasiController::class, 'index'])
+        ->name('informasi.index');
 
-    // ✅ Perbaikan di sini
-Route::get('/get-foto-tipe/{id}', [\App\Http\Controllers\TipeKamarController::class, 'getFotoTipe']);
+    Route::get('/get-foto-tipe/{id}', 
+        [\App\Http\Controllers\TipeKamarController::class, 'getFotoTipe']);
 });
-
-
 
 Route::group([
     'prefix'     => 'housekeeping',

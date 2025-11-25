@@ -28,8 +28,7 @@ public function index()
         'kamarTersedia',
         'kamarTerisi',
         'kamarMaintenance',
-        'reservasiHariIni',
-        'jumlahCheckin'
+        'reservasiHariIni'
     ));
 }
 }
