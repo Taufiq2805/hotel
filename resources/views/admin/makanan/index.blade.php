@@ -34,7 +34,7 @@
                             <td>{{ Str::limit($item->deskripsi, 16) }}</td>
                             <td>
                                @if($item->foto)
-    <img src="{{ asset('uploads/makanan/' . $item->foto) }}" width="80" height="50" style="object-fit: cover;">
+    <img src="{{ asset('storage/makanan/' . $item->foto) }}" width="80" height="50" style="object-fit: cover;">
 @else
     <span class="text-muted">-</span>
 @endif

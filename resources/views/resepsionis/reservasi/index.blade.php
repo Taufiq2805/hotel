@@ -212,7 +212,7 @@
                                             <!-- { changed code } -->
                                             <option value="{{ $m->id }}"
                                                 data-harga="{{ $m->harga }}"
-                                                data-foto="{{ $m->foto ? asset('storage/uploads/makanan/'.$m->foto) : asset('images/no-image.jpg') }}"
+                                                data-foto="{{ $m->foto ? asset('storage/makanan/'.$m->foto) : asset('images/no-image.jpg') }}"
                                                 data-deskripsi="{{ $m->deskripsi ?? '-' }}">
                                                 {{ $m->nama }}
                                             </option>
