@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Makanan;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Storage;
 
 class MakananController extends Controller
 {
@@ -35,7 +35,7 @@ class MakananController extends Controller
     if ($request->hasFile('foto')) {
         $file = $request->file('foto');
         $filename = time() . '.' . $file->getClientOriginalExtension();
-        $file->move(public_path('uploads/makanan'), $filename);
+        Storage::disk('public')->putFileAs('makanan', $file, $filename);
         $data['foto'] = $filename;
     }
 
@@ -61,14 +61,14 @@ class MakananController extends Controller
         // Jika ada foto baru
         if ($request->hasFile('foto')) {
             // Hapus foto lama
-            if ($makanan->foto && File::exists(public_path('uploads/makanan/' . $makanan->foto))) {
-                File::delete(public_path('uploads/makanan/' . $makanan->foto));
+            if ($makanan->foto && Storage::disk('public')->exists('makanan/' . $makanan->foto)) {
+                Storage::disk('public')->delete('makanan/' . $makanan->foto);
             }
 
             // Upload foto baru
             $file = $request->file('foto');
             $filename = time() . '.' . $file->getClientOriginalExtension();
-            $file->move(public_path('uploads/makanan'), $filename);
+            Storage::disk('public')->putFileAs('makanan', $file, $filename);
             $data['foto'] = $filename;
         }
 
@@ -80,8 +80,8 @@ class MakananController extends Controller
     // Hapus menu
     public function destroy(Makanan $makanan)
     {
-        if ($makanan->foto && File::exists(public_path('uploads/makanan/' . $makanan->foto))) {
-            File::delete(public_path('uploads/makanan/' . $makanan->foto));
+        if ($makanan->foto && Storage::disk('public')->exists('makanan/' . $makanan->foto)) {
+            Storage::disk('public')->delete('makanan/' . $makanan->foto);
         }
 
         $makanan->delete();

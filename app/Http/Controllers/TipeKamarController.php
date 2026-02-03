@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\TipeKamar;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Storage;
 
 class TipeKamarController extends Controller
 {
@@ -32,8 +32,8 @@ class TipeKamarController extends Controller
 
         if ($request->hasFile('foto')) {
             $foto = $request->file('foto');
-            $filename = time() . '_' . $foto->getClientOriginalName();
-            $foto->move(public_path('uploads/tipekamar'), $filename);
+            $filename = time() . '.' . $foto->getClientOriginalExtension();
+            Storage::disk('public')->putFileAs('tipekamar', $foto, $filename);
             $data['foto'] = $filename;
         }
 
@@ -60,13 +60,13 @@ class TipeKamarController extends Controller
 
         if ($request->hasFile('foto')) {
             // Hapus foto lama jika ada
-            if ($tipeKamar->foto && file_exists(public_path('uploads/tipekamar/' . $tipeKamar->foto))) {
-                File::delete(public_path('uploads/tipekamar/' . $tipeKamar->foto));
+            if ($tipeKamar->foto && Storage::disk('public')->exists('tipekamar/' . $tipeKamar->foto)) {
+                Storage::disk('public')->delete('tipekamar/' . $tipeKamar->foto);
             }
 
             $foto = $request->file('foto');
-            $filename = time() . '_' . $foto->getClientOriginalName();
-            $foto->move(public_path('uploads/tipekamar'), $filename);
+            $filename = time() . '.' . $foto->getClientOriginalExtension();
+            Storage::disk('public')->putFileAs('tipekamar', $foto, $filename);
             $data['foto'] = $filename;
         }
 
@@ -78,8 +78,8 @@ class TipeKamarController extends Controller
     public function destroy(TipeKamar $tipeKamar)
     {
         // Hapus foto dari folder
-        if ($tipeKamar->foto && file_exists(public_path('uploads/tipekamar/' . $tipeKamar->foto))) {
-            File::delete(public_path('uploads/tipekamar/' . $tipeKamar->foto));
+        if ($tipeKamar->foto && Storage::disk('public')->exists('tipekamar/' . $tipeKamar->foto)) {
+            Storage::disk('public')->delete('tipekamar/' . $tipeKamar->foto);
         }
 
         $tipeKamar->delete();

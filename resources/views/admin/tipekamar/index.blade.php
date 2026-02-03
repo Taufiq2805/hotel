@@ -30,7 +30,7 @@
                             <td>{{Str::limit($tipe->deskripsi, 16)}}</td>
                             <td>
                                 @if($tipe->foto)
-                                    <img src="{{ asset('uploads/tipekamar/' . $tipe->foto) }}" width="80" height="50" style="object-fit: cover;">
+                                    <img src="{{ asset('storage/tipekamar/' . $tipe->foto) }}" width="80" height="50" style="object-fit: cover;">
                                 @else
                                     <span class="text-muted">-</span>
                                 @endif
